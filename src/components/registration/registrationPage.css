@@ -1,0 +1,90 @@
+.mainHeading{
+    display: flex;
+}
+.main{
+    display: flex !important;
+    flex-direction: column !important;  
+    align-items: flex-start !important;
+    border-radius: 1em !important;
+    border: 1px solid lightgray !important;
+    padding: 40px;
+    padding-top: 48px;
+    padding-bottom: 36px;
+}
+form{
+    padding-left: 0px;
+    padding-top: 24px;
+    padding-right: 40px;
+}
+.sign{
+    padding-top: 40px;
+}
+.row{
+    margin-bottom: 10px;
+}
+.next{
+    margin-left: 270px !important;
+}
+.mr{    
+    margin-right: 10px !important;
+}
+.mainFile{
+    display: flex;
+    flex-direction: row;
+}
+.textField{
+    width: 200px;
+}
+.email{
+    width: 410px;
+    padding-top: 15px;
+}
+.header{
+    margin-block-start: unset;
+    margin-block-end: unset;
+    margin-inline-start: unset;
+    margin-inline-end: unset;
+    font-weight: unset;
+}
+.mainFile{
+    margin-bottom: 50px ;
+}
+.F ,.D {
+    color: #4285F4;
+    font-size: 25px;
+}
+.U{
+    color: crimson;
+    font-size: 25px;
+}
+.N{
+    color: yellow;
+    font-size: 25px;
+}
+.O{
+    color: green;
+    font-size: 25px;
+}
+.row{
+    display: flex !important;
+    justify-content: start !important;
+    padding-top: 8px;
+}
+.button{
+    text-transform: unset !important;
+}
+.showPassword{
+    padding-top: 9px;
+}
+@media only screen and (max-width: 600px) {
+    img{
+        display: none;
+    }
+    .main{
+        border: unset !important;
+    }
+    .row{
+        display: flex;
+        flex-wrap: wrap;     
+    }
+  }
