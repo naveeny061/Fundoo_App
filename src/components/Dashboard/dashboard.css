@@ -2,11 +2,6 @@
     height: 100vh !important;
     width: 100% !important;
 }
-.appBar{
-    color: black;
-    background-color: white;
-}
-.drawer{
-    position: unset !important;
-
+.menu-button{
+    margin: 4px;
 }
