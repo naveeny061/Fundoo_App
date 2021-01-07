@@ -44,10 +44,10 @@ const useStyles = makeStyles((theme) => ({
     border:"none",
     position:'relative',
     width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
+    // transition: theme.transitions.create('width', {
+    //   easing: theme.transitions.easing.sharp,
+    //   duration: theme.transitions.duration.enteringScreen,
+    // }),
   },
   drawerClose: {
     position:'relative',
@@ -61,13 +61,21 @@ const useStyles = makeStyles((theme) => ({
       width: theme.spacing(9) + 1,
     },
   },
+  mainContainer:{
+    width:'100vw',
+    display:'flex',
+    flexDirection:'column',
+    alignItems:'center',
+    paddingTop:'32px'
+  },
   toolbar: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+    borderBottom: '1px solid lightGrey',
+    borderRadius:0,
     // padding: theme.spacing(0, 1),
-    padding: '8px',
+    // padding: '8px',
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
   },
@@ -155,7 +163,8 @@ export default function Dashboard() {
 
   return (
     <div className='main-dashboard'>
-        <Toolbar>
+        <div> 
+        <Toolbar className={classes.toolbar}>
         <IconButton className='menu-button' onClick={ open ? handleDrawerClose : handleDrawerOpen }>
           <MenuIcon />          
         </IconButton>
@@ -201,6 +210,8 @@ export default function Dashboard() {
       </MenuItem>
       <div className={classes.grow} />
       </Toolbar>
+      </div>
+      <div className='content'>
       <Drawer
         variant="permanent"
         className={clsx(classes.drawer, {
@@ -247,7 +258,10 @@ export default function Dashboard() {
           </ListItem>  
         </List>
       </Drawer>
-      <Notes/>
+      <div className={classes.mainContainer}>
+        <Notes/>
+      </div>
+      </div>
     </div>
   );
 }
