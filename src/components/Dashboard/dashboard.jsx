@@ -20,8 +20,12 @@ import ArchiveOutlinedIcon  from '@material-ui/icons/ArchiveOutlined';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import Notes from '../notes/createNotes'
+import Avatar from '@material-ui/core/Avatar';
+import DisplayNotes from "../displayNotes/displayNotes";
+import Service from '../../Services/noteService'
+
+const services = new Service()
 
 const drawerWidth = 240;
 
@@ -143,6 +147,7 @@ export default function Dashboard() {
 
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [noteList, setNoteList] = React.useState([]);
 
   const isMenuOpen = Boolean(anchorEl);
 
@@ -159,8 +164,19 @@ export default function Dashboard() {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
-  };
-
+  }
+  const getNote = () => {
+    services.getNoteList(localStorage.getItem("userToken")).then((result) => {
+        console.log(result)
+        setNoteList(result.data.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  React.useEffect(() => {
+    getNote()
+  }, []);
   return (
     <div className='main-dashboard'>
         <div> 
@@ -204,9 +220,8 @@ export default function Dashboard() {
           aria-haspopup="true"
           color="inherit"
         >
-          <AccountCircle />
+          <Avatar alt="H" src="/static/images/avatar/2.jpg" />
         </IconButton>
-        <p>Profile</p>
       </MenuItem>
       <div className={classes.grow} />
       </Toolbar>
@@ -259,7 +274,8 @@ export default function Dashboard() {
         </List>
       </Drawer>
       <div className={classes.mainContainer}>
-        <Notes/>
+        <Notes />
+        <DisplayNotes  NoteList={noteList} GetNote={getNote} />
       </div>
       </div>
     </div>

@@ -1,0 +1,12 @@
+.notes1{
+    width:25vw;
+    border: 1px solid lightGrey;
+    border-radius:0.5em;
+    padding:10px 15px;
+    margin: 10px;
+    
+}
+.displayNotes{
+    display: flex;
+    flex-wrap: wrap;
+}

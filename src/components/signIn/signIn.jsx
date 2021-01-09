@@ -46,6 +46,7 @@ export default class signIn extends React.Component{
             }
             service.login(userData).then(data=>{
                 console.log(data);
+                localStorage.setItem("userToken",data.data.id);
                 this.setState(
                     {
                         snackbarOpen: true
