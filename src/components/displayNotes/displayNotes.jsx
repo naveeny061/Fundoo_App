@@ -3,10 +3,9 @@ import NotesTools from "../../components/notesTools/notesTools";
 import './displayote.css'
 
     export default function DisplayNotes(props) {
-    // const [bgColor, setBgColor] = React.useState('#fff')
     return (
         <div className='displayNotes'>
-            {props.NoteList.map((item) =>(
+            {props.NoteList.filter(item => item.isDeleted === false).map((item) =>(
             <div className='notes1' style={{  backgroundColor: item.color }}>
                 <div>
                     {item.title}
@@ -15,7 +14,7 @@ import './displayote.css'
                     {item.description}
                 </div>
                 <div>
-                    <NotesTools />
+                    <NotesTools  id={item.id}/>
                 </div>
             </div> 
         ))}

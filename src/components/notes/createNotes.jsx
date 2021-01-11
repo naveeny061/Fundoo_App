@@ -20,13 +20,13 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function CreateNotes() {
+export default function CreateNotes(props) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(true);
     const [bgColor, setBgColor] = React.useState('#fff')
     const [title, setTitle] = React.useState('');
     const [description, setDescription] = React.useState('');
-
+    
     const handleClick = () => {
         setOpen(!open);
         saveNote();
@@ -40,6 +40,11 @@ export default function CreateNotes() {
             }
             services.saveNotes(noteData,localStorage.getItem("userToken")).then(result => {
                 console.log(result);
+                // console.log(props.NoteList.map((item)=>(
+                //     console.log(item.id)
+                // )));
+                // console.log(saveNote)
+                // console.log(props.GetNote())
             }).catch((error) => {
                     console.log(error);
                 });
@@ -52,7 +57,8 @@ export default function CreateNotes() {
         setDescription('');
     }
         return(
-        <div >{ open ?
+        <div >
+            { open ?
             <div className='notes' onClick={handleClick} >
                 <span className='text'>Take a note...</span>
                 <IconButton className='icon'><CheckBoxOutlinedIcon /></IconButton>
@@ -70,7 +76,8 @@ export default function CreateNotes() {
                 </div>
                 <InputBase placeholder='Take a note' fullWidth value={description} onChange={(e) => setDescription(e.target.value)}/>
                 <div className='tools-close'>
-                <NotesTool  setBgColor={setBgColor}/>
+                    {/* {console.log(noteData)} */}
+                <NotesTool  setBgColor={setBgColor}  />
                 <button className='closeButton' onClick={handleClick}>Close</button>
                 </div>
             </div>

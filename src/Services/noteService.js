@@ -18,4 +18,12 @@ export default class noteService{
             }
         });
     }
+    delete = (data, token) => {
+        return httpService.Post(`${this.baseUrl}notes/trashNotes`, data, {
+            headers: {
+                Authorization: `${token}`,
+            }
+        });
+    }
+
 }

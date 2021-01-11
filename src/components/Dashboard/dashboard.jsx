@@ -274,7 +274,7 @@ export default function Dashboard() {
         </List>
       </Drawer>
       <div className={classes.mainContainer}>
-        <Notes />
+        <Notes GetNote={getNote} NoteList={noteList}/>
         <DisplayNotes  NoteList={noteList} GetNote={getNote} />
       </div>
       </div>

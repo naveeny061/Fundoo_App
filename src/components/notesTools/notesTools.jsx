@@ -6,23 +6,14 @@ import PersonAddOutlinedIcon from '@material-ui/icons/PersonAddOutlined';
 import ColorLensOutlinedIcon from '@material-ui/icons/ColorLensOutlined';
 import ArchiveOutlinedIcon from '@material-ui/icons/ArchiveOutlined';
 import MoreVertOutlinedIcon from '@material-ui/icons/MoreVertOutlined';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import './notesTools.css';
-import Popover from '@material-ui/core/Popover';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import Service from '../../Services/noteService'
 
-const useStyles = makeStyles((theme) => ({
-    popover: {
-      pointerEvents: 'none',
-    },
-    paper: {
-      padding: theme.spacing(1),
-    },
-  }));
+const services = new Service()
 
-export default function NotesTools({setBgColor}){
-    const classes = useStyles();
-    const open = Boolean(anchorEl);
+export default function NotesTools(props){
     const data = [
         {key:'1' ,id: "#fff" },
         {key:'2' ,id: "#f28b82" },
@@ -39,17 +30,10 @@ export default function NotesTools({setBgColor}){
     ];
     const [color, setColor] = React.useState(false)
     const [pallete, showPallete] = React.useState(false);
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const[open, setOpen] = React.useState(false);
 
-  const handlePopoverOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  }
     const selectColor = (value) => {
-        setBgColor(value);
+        props.setBgColor(value);
     };
 
     const handleColor = () => {
@@ -63,7 +47,23 @@ export default function NotesTools({setBgColor}){
         handleColor();
         showPallete(!pallete)
     }
-    
+    const handleClick = () => {
+      setOpen(!open);
+  } 
+  const handleDeleteNotes = () => {
+    console.log(props.id)
+    let data = {
+        noteIdList: [props.id],
+         isDeleted: true
+    }
+    services.delete(data, localStorage.getItem("userToken")).then(result => {
+        console.log(result)
+        // setAnchorEl(null);
+        // props.GetNote();
+    }).catch(error => {
+        console.log(error);
+    })
+}
     return(
         <div>
             <IconButton>
@@ -87,33 +87,21 @@ export default function NotesTools({setBgColor}){
             <IconButton>
                 <ImageOutlinedIcon fontSize='small'/>
             </IconButton>
-            <Popover
-        id="mouse-over-popover"
-        className={classes.popover}
-        classes={{
-          paper: classes.paper,
-        }}
-        open={open}
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        onClose={handlePopoverClose}
-        disableRestoreFocus
-      >
-        <Typography>I use Popover.</Typography>
-      </Popover>        
             <IconButton>
                 <ArchiveOutlinedIcon fontSize='small'/>
             </IconButton>
-            <IconButton>
+            <IconButton onClick={handleClick}>
                 <MoreVertOutlinedIcon fontSize='small'/>
             </IconButton>
+                <Menu
+                    id="simple-menu"
+                    // anchorEl={anchorEl}
+                    keepMounted
+                    open={open}
+                    onClose={handleClick}>
+                    <MenuItem onClick={handleDeleteNotes}>Delete Note</MenuItem>
+                </Menu>
+            
         </div>
     );
 }
