@@ -26,7 +26,7 @@ export default function CreateNotes(props) {
     const [bgColor, setBgColor] = React.useState('#fff')
     const [title, setTitle] = React.useState('');
     const [description, setDescription] = React.useState('');
-    
+
     const handleClick = () => {
         setOpen(!open);
         saveNote();
@@ -45,6 +45,7 @@ export default function CreateNotes(props) {
                 // )));
                 // console.log(saveNote)
                 // console.log(props.GetNote())
+                props.GetNote()
             }).catch((error) => {
                     console.log(error);
                 });
@@ -71,12 +72,11 @@ export default function CreateNotes(props) {
                 <div className='title'>
                 <InputBase placeholder='Title' fullWidth value={title} onChange={(e) => setTitle(e.target.value)}/>
                 <button className='pinbutton'>
-                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij4KICA8cGF0aCBmaWxsPSJub25lIiBkPSJNMCAwaDI0djI0SDB6Ii8+CiAgPHBhdGggZmlsbD0iIzAwMCIgZD0iTTE3IDR2N2wyIDN2MmgtNnY1bC0xIDEtMS0xdi01SDV2LTJsMi0zVjRjMC0xLjEuOS0yIDItMmg2YzEuMTEgMCAyIC44OSAyIDJ6TTkgNHY3Ljc1TDcuNSAxNGg5TDE1IDExLjc1VjRIOXoiLz4KPC9zdmc+Cg==" alt=""/>
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij4KICA8cGF0aCBmaWxsPSJub25lIiBkPSJNMCAwaDI0djI0SDB6Ii8+CiAgPHBhdGggZmlsbD0iIzAwMCIgZD0iTTE3IDR2N2wyIDN2MmgtNnY1bC0xIDEtMS0xdi01SDV2LTJsMi0zVjRjMC0xLjEuOS0yIDItMmg2YzEuMTEgMCAyIC44OSAyIDJ6TTkgNHY3Ljc1TDcuNSAxNGg5TDE1IDExLjc1VjRIOXoiLz4KPC9zdmc+Cg==" alt=""/>
                 </button>
                 </div>
                 <InputBase placeholder='Take a note' fullWidth value={description} onChange={(e) => setDescription(e.target.value)}/>
                 <div className='tools-close'>
-                    {/* {console.log(noteData)} */}
                 <NotesTool  setBgColor={setBgColor}  />
                 <button className='closeButton' onClick={handleClick}>Close</button>
                 </div>

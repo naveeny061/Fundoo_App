@@ -2,10 +2,10 @@ import React from 'react';
 import clsx from 'clsx';
 import { makeStyles , fade } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
+import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ListItem from '@material-ui/core/ListItem';
@@ -24,6 +24,8 @@ import Notes from '../notes/createNotes'
 import Avatar from '@material-ui/core/Avatar';
 import DisplayNotes from "../displayNotes/displayNotes";
 import Service from '../../Services/noteService'
+import TrashNotes from '../../components/trashNote/trashNotes'
+import ArchiveNote from '../../components/archive/archive'
 
 const services = new Service()
 
@@ -33,9 +35,10 @@ const useStyles = makeStyles((theme) => ({
   // root: {
   //   display: 'flex',
   // },
-  // menuButton: {
-  //   marginRight: 36,
-  // },
+  menuButton: {
+    marginRight: 20,
+    marginLeft: 20
+  },
   // hide: {
   //   display: 'none',
   // },
@@ -72,17 +75,17 @@ const useStyles = makeStyles((theme) => ({
     alignItems:'center',
     paddingTop:'32px'
   },
-  toolbar: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    borderBottom: '1px solid lightGrey',
-    borderRadius:0,
-    // padding: theme.spacing(0, 1),
-    // padding: '8px',
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-  },
+  // toolbar: {
+  //   display: 'flex',
+  //   alignItems: 'center',
+  //   // justifyContent: 'flex-end',
+  //   borderBottom: '1px solid lightGrey',
+  //   borderRadius:0,
+  //   // padding: theme.spacing(0, 1),
+  //   // padding: '8px',
+  //   // necessary for content to be below app bar
+  //   ...theme.mixins.toolbar,
+  // },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
@@ -91,10 +94,24 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   title: {
+    color:'black',
     display: 'none',
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
+  },
+  appBar:{
+    background: 'white',
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection:'row',
+    boxShadow :'unset',
+    borderBottom: '1px solid lightGrey',
+    borderRadius:0,
+    // padding: theme.spacing(0, 1),
+    // padding: '8px',
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
   },
   search: {
     display:'flex',
@@ -121,9 +138,10 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    color:'black'
   },
   inputRoot: {
-    color: 'inherit',
+    // color: 'inherit',
     background:'#f1f3f4',
     borderRadius:'0.5em',
     width:'100%',
@@ -138,17 +156,23 @@ const useStyles = makeStyles((theme) => ({
       width: '20ch',
     },
   },
+  sectionDesktop: {
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+      display: 'flex',
+    },
+  },
 }));
 
 export default function Dashboard() {
   
   const classes = useStyles();
-  // const theme = useTheme();
-
+  const menuId = 'primary-search-account-menu';
   const [open, setOpen] = React.useState(false);
+  const [openTrash, setTrash] = React.useState(false);
+  const [openArchive, setArchive] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [noteList, setNoteList] = React.useState([]);
-
   const isMenuOpen = Boolean(anchorEl);
 
   const handleDrawerOpen = () => {
@@ -157,7 +181,12 @@ export default function Dashboard() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
+  const handleTrash = () => {
+    setTrash(!openTrash);
+  };
+  const handleArchive = () => {
+    setArchive(!openArchive);
+  };
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -168,7 +197,7 @@ export default function Dashboard() {
   const getNote = () => {
     services.getNoteList(localStorage.getItem("userToken")).then((result) => {
         console.log(result)
-        setNoteList(result.data.data.data);
+        setNoteList(result.data.data.data.filter(item => item.isDeleted === false && item.isArchived === false));
       })
       .catch((error) => {
         console.log(error);
@@ -179,21 +208,25 @@ export default function Dashboard() {
   }, []);
   return (
     <div className='main-dashboard'>
-        <div> 
-        <Toolbar className={classes.toolbar}>
-        <IconButton className='menu-button' onClick={ open ? handleDrawerClose : handleDrawerOpen }>
-          <MenuIcon />          
-        </IconButton>
+      <div> 
+        <AppBar position="static" className={classes.appBar}>
+          <IconButton
+            onClick={ open ? handleDrawerClose : handleDrawerOpen }
+            className={classes.menuButton}
+            aria-label="open drawer"
+          >
+            <MenuIcon />
+          </IconButton>
           <img src="https://www.gstatic.com/images/branding/product/1x/keep_2020q4_48dp.png" alt=""/>
           <Typography className={classes.title} variant="h6" noWrap>
-            Fundoo
+            Fundoo 
           </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
             <InputBase
-              placeholder="Search"
+              placeholder="Search…"
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
@@ -201,33 +234,33 @@ export default function Dashboard() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </div>
+          <div className={classes.grow} />
+          <div className={classes.sectionDesktop}>
+            <IconButton
+              aria-label="account of current user"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              onClick={handleProfileMenuOpen}
+            >
+              <Avatar alt="H" src="/static/images/avatar/2.jpg" />
+            </IconButton>
+          </div>
           <Menu
-            anchorEl={anchorEl}
-            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-            keepMounted
-            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-            open={isMenuOpen}
-            onClose={handleMenuClose}
+          anchorEl={anchorEl}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          id={menuId}
+          keepMounted
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+          open={isMenuOpen}
+          onClose={handleMenuClose}
           >
             <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
             <MenuItem onClick={handleMenuClose}>My account</MenuItem>
           </Menu>
-          
-          <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <Avatar alt="H" src="/static/images/avatar/2.jpg" />
-        </IconButton>
-      </MenuItem>
-      <div className={classes.grow} />
-      </Toolbar>
+        </AppBar>
       </div>
       <div className='content'>
-      <Drawer
+        <Drawer
         variant="permanent"
         className={clsx(classes.drawer, {
           [classes.drawerOpen]: open,
@@ -239,43 +272,53 @@ export default function Dashboard() {
             [classes.drawerClose]: !open,
           }),
         }}
-      >
-        <List>
-          <ListItem button>
-            <ListItemIcon>
-              <EmojiObjectsOutlinedIcon />
-            </ListItemIcon>
-            <ListItemText primary="Notes" />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <NotificatiosNoneOutlinedIcon />
-            </ListItemIcon>
-            <ListItemText primary="Reminder" />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <EditOutlinedIcon />
-            </ListItemIcon>
-            <ListItemText primary="Edit Labels" />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <ArchiveOutlinedIcon />
-            </ListItemIcon>
-            <ListItemText primary="Archive" />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <DeleteIcon />
-            </ListItemIcon>
-            <ListItemText primary="Trash" />
-          </ListItem>  
-        </List>
-      </Drawer>
-      <div className={classes.mainContainer}>
-        <Notes GetNote={getNote} NoteList={noteList}/>
-        <DisplayNotes  NoteList={noteList} GetNote={getNote} />
+        >
+          <List>
+            <ListItem button>
+              <ListItemIcon>
+                <EmojiObjectsOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText primary="Notes" />
+            </ListItem>
+            <ListItem button>
+              <ListItemIcon>
+                <NotificatiosNoneOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText primary="Reminder" />
+            </ListItem>
+            <ListItem button>
+              <ListItemIcon>
+                <EditOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText primary="Edit Labels" />
+            </ListItem>
+            <ListItem button>
+              <ListItemIcon>
+                <ArchiveOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText primary="Archive" onClick={handleArchive}/>
+            </ListItem>
+            <ListItem button>
+              <ListItemIcon>
+                <DeleteIcon />
+              </ListItemIcon>
+              <ListItemText primary="Trash" onClick={handleTrash} />
+            </ListItem>  
+          </List>
+        </Drawer>
+      <div className={classes.mainContainer}><>
+        if (openTrash) {
+          <TrashNotes/>
+        }
+        if(openArchive){
+          <ArchiveNote/>
+        }  
+        if (!openTrash && ! openArchive) {<>
+          <Notes GetNote={getNote} NoteList={noteList}/>  
+          <DisplayNotes  NoteList={noteList} GetNote={getNote} />
+          </>  
+        }
+      </>
       </div>
       </div>
     </div>

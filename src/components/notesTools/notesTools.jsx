@@ -51,24 +51,35 @@ export default function NotesTools(props){
       setOpen(!open);
   } 
   const handleDeleteNotes = () => {
-    console.log(props.id)
     let data = {
         noteIdList: [props.id],
          isDeleted: true
     }
     services.delete(data, localStorage.getItem("userToken")).then(result => {
         console.log(result)
-        // setAnchorEl(null);
-        // props.GetNote();
+        props.GetNote();
     }).catch(error => {
         console.log(error);
     })
 }
+    const handleArchiveNotes = () => {
+        let data = {
+            noteIdList: [props.id],
+            isArchived: true
+        }
+        services.archiveNotes(data, localStorage.getItem("userToken")).then(result => {
+            console.log(result)
+            props.GetNote();
+        }).catch(error => {
+            console.log(error);
+        })
+    }
+
     return(
         <div>
             <IconButton>
-                <AddAlertOutlinedIcon fontSize='small' />
             </IconButton>
+                <AddAlertOutlinedIcon fontSize='small' />
             <IconButton>
                 <PersonAddOutlinedIcon fontSize='small'/>
             </IconButton>
@@ -87,13 +98,15 @@ export default function NotesTools(props){
             <IconButton>
                 <ImageOutlinedIcon fontSize='small'/>
             </IconButton>
-            <IconButton>
+            <IconButton onClick={handleArchiveNotes}>
                 <ArchiveOutlinedIcon fontSize='small'/>
             </IconButton>
+            <>
             <IconButton onClick={handleClick}>
                 <MoreVertOutlinedIcon fontSize='small'/>
             </IconButton>
                 <Menu
+                    className='moreOptions'
                     id="simple-menu"
                     // anchorEl={anchorEl}
                     keepMounted
@@ -101,7 +114,7 @@ export default function NotesTools(props){
                     onClose={handleClick}>
                     <MenuItem onClick={handleDeleteNotes}>Delete Note</MenuItem>
                 </Menu>
-            
+            </>
         </div>
     );
 }

@@ -2,6 +2,7 @@
     border: 1px solid gray;
     border-radius: 0.5em;
     width: 50vw;
+    height: max-content;
     display: flex;
 }
 .icon{

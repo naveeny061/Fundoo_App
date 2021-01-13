@@ -25,5 +25,32 @@ export default class noteService{
             }
         });
     }
-
+    updateNotes = (data, token) => {
+        return httpService.Post(`${this.baseUrl}notes/updateNotes`, data, {
+            headers: {
+                Authorization: `${token}`,
+            }
+        });
+    }
+    archiveNotes = (data, token) => {
+        return httpService.Post(`${this.baseUrl}notes/archiveNotes`, data, {
+            headers: {
+                Authorization: `${token}`,
+            }
+        });
+    }
+    getTrashNoteList = (token) => {
+        return httpService.Get(`${this.baseUrl}notes/getTrashNotesList`, {
+            headers: {
+                Authorization: `${token}`,
+            }
+        });
+    }
+    getArchiveNoteList = (token) => {
+        return httpService.Get(`${this.baseUrl}notes/getArchiveNotesList`, {
+            headers: {
+                Authorization: `${token}`,
+            }
+        });
+    }
 }
