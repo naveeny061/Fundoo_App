@@ -19,29 +19,20 @@ import EditOutlinedIcon  from '@material-ui/icons/EditOutlined';
 import ArchiveOutlinedIcon  from '@material-ui/icons/ArchiveOutlined';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Notes from '../notes/createNotes'
 import Avatar from '@material-ui/core/Avatar';
-import DisplayNotes from "../displayNotes/displayNotes";
-import Service from '../../Services/noteService'
 import TrashNotes from '../../components/trashNote/trashNotes'
+import Notes from '../../components/Note/Note'
 import ArchiveNote from '../../components/archive/archive'
-
-const services = new Service()
+import {Switch, Route ,Link ,Redirect} from 'react-router-dom'
+import Button from '@material-ui/core/Button'
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
-  // root: {
-  //   display: 'flex',
-  // },
   menuButton: {
     marginRight: 20,
     marginLeft: 20
   },
-  // hide: {
-  //   display: 'none',
-  // },
   drawer: {
     width: drawerWidth,
     whiteSpace: 'nowrap',
@@ -51,10 +42,10 @@ const useStyles = makeStyles((theme) => ({
     border:"none",
     position:'relative',
     width: drawerWidth,
-    // transition: theme.transitions.create('width', {
-    //   easing: theme.transitions.easing.sharp,
-    //   duration: theme.transitions.duration.enteringScreen,
-    // }),
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
   drawerClose: {
     position:'relative',
@@ -75,17 +66,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems:'center',
     paddingTop:'32px'
   },
-  // toolbar: {
-  //   display: 'flex',
-  //   alignItems: 'center',
-  //   // justifyContent: 'flex-end',
-  //   borderBottom: '1px solid lightGrey',
-  //   borderRadius:0,
-  //   // padding: theme.spacing(0, 1),
-  //   // padding: '8px',
-  //   // necessary for content to be below app bar
-  //   ...theme.mixins.toolbar,
-  // },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
@@ -108,16 +88,12 @@ const useStyles = makeStyles((theme) => ({
     boxShadow :'unset',
     borderBottom: '1px solid lightGrey',
     borderRadius:0,
-    // padding: theme.spacing(0, 1),
-    // padding: '8px',
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
+    // ...theme.mixins.toolbar,
   },
   search: {
     display:'flex',
     flex:'row',
     position: 'relative',
-    // borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.white, 0.15),
     '&:hover': {
       backgroundColor: fade(theme.palette.common.white, 0.25),
@@ -141,27 +117,40 @@ const useStyles = makeStyles((theme) => ({
     color:'black'
   },
   inputRoot: {
-    // color: 'inherit',
     background:'#f1f3f4',
     borderRadius:'0.5em',
     width:'100%',
+    [theme.breakpoints.down('xs')]: {
+      width: '0',
+    }
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create('width'),
     width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
+    [theme.breakpoints.down('md')]: {
+      width: '40ch',
     },
+
   },
-  sectionDesktop: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-    },
+  // sectionDesktop: {
+  //   // display: 'none',
+  //   [theme.breakpoints.up('md')]: {
+  //     display: 'flex',
+  //   },
+  // },
+  profile:{
+    display: 'flex',
+    flexDirection:'column',
+    alignItems:'center',
+    marginTop:'20px',
+    marginLeft:'50px',
+    marginRight:'50px'
   },
+  image:{
+    display:'permanent'
+  }
 }));
 
 export default function Dashboard() {
@@ -169,10 +158,10 @@ export default function Dashboard() {
   const classes = useStyles();
   const menuId = 'primary-search-account-menu';
   const [open, setOpen] = React.useState(false);
+  const [redirect, setRedirect] = React.useState(false);
   const [openTrash, setTrash] = React.useState(false);
   const [openArchive, setArchive] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [noteList, setNoteList] = React.useState([]);
   const isMenuOpen = Boolean(anchorEl);
 
   const handleDrawerOpen = () => {
@@ -190,22 +179,16 @@ export default function Dashboard() {
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
   const handleMenuClose = () => {
     setAnchorEl(null);
   }
-  const getNote = () => {
-    services.getNoteList(localStorage.getItem("userToken")).then((result) => {
-        console.log(result)
-        setNoteList(result.data.data.data.filter(item => item.isDeleted === false && item.isArchived === false));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  React.useEffect(() => {
-    getNote()
-  }, []);
+  const handleLogout = () => {
+    localStorage.clear();
+    setRedirect(true);
+  };
+  if(redirect){
+   return <Redirect to='/signIn' />
+ } 
   return (
     <div className='main-dashboard'>
       <div> 
@@ -217,7 +200,9 @@ export default function Dashboard() {
           >
             <MenuIcon />
           </IconButton>
-          <img src="https://www.gstatic.com/images/branding/product/1x/keep_2020q4_48dp.png" alt=""/>
+          <div className={classes.image}>
+            <img src="https://www.gstatic.com/images/branding/product/1x/keep_2020q4_48dp.png" alt=""/>
+          </div>
           <Typography className={classes.title} variant="h6" noWrap>
             Fundoo 
           </Typography>
@@ -245,17 +230,29 @@ export default function Dashboard() {
               <Avatar alt="H" src="/static/images/avatar/2.jpg" />
             </IconButton>
           </div>
-          <Menu
-          anchorEl={anchorEl}
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-          id={menuId}
-          keepMounted
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-          open={isMenuOpen}
-          onClose={handleMenuClose}
-          >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+          <Menu      
+            anchorEl={anchorEl}
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            id={menuId}
+            keepMounted
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            open={isMenuOpen}
+            onClose={handleMenuClose}
+          > 
+            <div className={classes.profile}>
+              <div className='profile-row'>
+                <Avatar alt="H" src="/static/images/avatar/2.jpg" sizes='large' />
+              </div>
+              <div className='profile-row'>
+                {localStorage.getItem("firstName")}{" "}{localStorage.getItem("lastName")}
+              </div>
+              <div className='profile-row'>
+                <span>{localStorage.getItem("email")}</span>
+              </div>
+              <div className='profile-logout'> 
+                <Button onClick={handleLogout}>Logout</Button>
+              </div>
+            </div>
           </Menu>
         </AppBar>
       </div>
@@ -274,7 +271,7 @@ export default function Dashboard() {
         }}
         >
           <List>
-            <ListItem button>
+            <ListItem  button component={Link} to="/dashBoard/notes">
               <ListItemIcon>
                 <EmojiObjectsOutlinedIcon />
               </ListItemIcon>
@@ -292,33 +289,26 @@ export default function Dashboard() {
               </ListItemIcon>
               <ListItemText primary="Edit Labels" />
             </ListItem>
-            <ListItem button>
+            <ListItem button component={Link} to="/dashBoard/archive">
               <ListItemIcon>
                 <ArchiveOutlinedIcon />
               </ListItemIcon>
-              <ListItemText primary="Archive" onClick={handleArchive}/>
+              <ListItemText primary="Archive"  onClick={handleArchive}/>
             </ListItem>
-            <ListItem button>
+            <ListItem button component={Link} to="/dashBoard/trash">
               <ListItemIcon>
                 <DeleteIcon />
               </ListItemIcon>
-              <ListItemText primary="Trash" onClick={handleTrash} />
+              <ListItemText primary="Trash"  onClick={handleTrash} />
             </ListItem>  
           </List>
         </Drawer>
-      <div className={classes.mainContainer}><>
-        if (openTrash) {
-          <TrashNotes/>
-        }
-        if(openArchive){
-          <ArchiveNote/>
-        }  
-        if (!openTrash && ! openArchive) {<>
-          <Notes GetNote={getNote} NoteList={noteList}/>  
-          <DisplayNotes  NoteList={noteList} GetNote={getNote} />
-          </>  
-        }
-      </>
+      <div className={classes.mainContainer}>
+      <Switch>
+          <Route exact path="/dashBoard/notes" component={Notes} />
+          <Route exact path="/dashBoard/trash" component={TrashNotes} />
+          <Route exact path="/dashBoard/archive" component={ArchiveNote} />
+        </Switch>
       </div>
       </div>
     </div>

@@ -6,25 +6,25 @@ const services = new Service()
 
 export default function TrashNotes() {
     const [trashNote, setTrashNote] = useState([]);
+    var trash = true
     
     const getTrashNote = () => {
         services.getTrashNoteList(localStorage.getItem("userToken"))
             .then((result) => {
-                setTrashNote(result.data.data.data)
-                console.log(trashNote)
+                setTrashNote(result.data.data.data.reverse())
             })
             .catch((error) => {
                 console.log(error)
             })
     }
 
-    React.useEffect(() => {
+    useEffect(() => {
         getTrashNote();
     },[]);
 
     return (
         <div>
-            <DisplayNote NoteList={trashNote} GetNote={getTrashNote} />
+            <DisplayNote NoteList={trashNote} GetNote={getTrashNote}  istrash={trash}/>
         </div>
     )
 }

@@ -167,7 +167,6 @@ export default class registrationPage extends React.Component{
       }
     render(){
         if(this.state.redirect){
-            console.log(this.state.redirect)
             return <Redirect to='/signIn' />
         }
         return <div className='main'>

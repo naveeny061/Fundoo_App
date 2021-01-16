@@ -47,6 +47,9 @@ export default class signIn extends React.Component{
             service.login(userData).then(data=>{
                 console.log(data);
                 localStorage.setItem("userToken",data.data.id);
+                localStorage.setItem("firstName", data.data.firstName);
+                localStorage.setItem("lastName", data.data.lastName);
+                localStorage.setItem("email", data.data.email);
                 this.setState(
                     {
                         snackbarOpen: true
@@ -104,7 +107,7 @@ export default class signIn extends React.Component{
     
     render(){
         if(this.state.redirect){
-                return <Redirect to='/Dashboard' />
+                return <Redirect to='/Dashboard/notes' />
         }
         return <div className='main1'>
                 <div className='mainHeading'>

@@ -1,14 +1,32 @@
 .notes1{
-    width:25vw;
     border: 1px solid lightGrey;
     border-radius:0.5em;
     padding:10px 15px;
     margin: 10px;
     height: max-content;
+    min-width: 250px;
+}
+.notes1:hover .toolbar{
+    visibility: unset;
+}
+.toolbar{
+    visibility: hidden;
 }
 .displayNotes{
     display: flex;
     flex-wrap: wrap;
-    /* flex-direction: row-reverse; */
     padding-top: 25px;
+}
+.description{
+    padding-bottom: 5px;
+    margin: inherit;
+}
+.title{
+    font-weight: 500;
+    margin: inherit;
+}
+@media screen and (max-width:360px) {
+    .notes1{
+    padding: 0;
+    }
 }

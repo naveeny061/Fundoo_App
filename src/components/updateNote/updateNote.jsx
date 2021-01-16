@@ -9,7 +9,7 @@ const services = new Service()
 
 const useStyles = makeStyles((theme) => ({
     notes1:{
-        width:'50vw',
+        width:'500px',
         border: '1px solid lightGrey',
         borderRadius:'0.5em',
         padding:'10px 15px',
@@ -18,7 +18,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function UpdateNote(props) {
     const classes = useStyles();
-    // const [open, setOpen] = React.useState(true);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [Bgcolor, setColor] = useState();
@@ -39,12 +38,12 @@ export default function UpdateNote(props) {
     }
     useEffect(() => {
         setTitle(props.item.title);
-        setId(props.item.id);
         setColor(props.item.color);
-        setDescription(props.item.description)
+        setDescription(props.item.description);
+        setId(props.item.id);
     }, [props])
     return(  
-        <Dialog onClose={props.close} aria-labelledby="simple-dialog-title" open={props.open}>
+        <Dialog onClose={props.close}  open={props.open}>
             <div className={classes.notes1}  style={{ backgroundColor: Bgcolor }} >
                 <div className='title'>
                 <InputBase placeholder='Title' fullWidth value={title} onChange={(e) => setTitle(e.target.value)}/>
@@ -54,7 +53,7 @@ export default function UpdateNote(props) {
                 </div>
                 <InputBase placeholder='Take a note' fullWidth value={description} onChange={(e) => setDescription(e.target.value)}/>
                 <div className='tools-close'>
-                <NotesTool id={props.item.id}  />
+                <NotesTool id={props.item.id} setBgColor={setColor} />
                 <button className='closeButton' onClick={handleUpdate}>Close</button>
                 </div>
             </div>

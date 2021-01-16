@@ -8,3 +8,9 @@
 .profileIcon{
     align-items: flex-end ;
 }
+.profile-row{
+    padding-bottom: 10px;    
+}
+.profile-logout{
+    padding-top: 40px;
+}

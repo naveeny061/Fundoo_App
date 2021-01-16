@@ -5,11 +5,16 @@ import AddAlertOutlinedIcon from '@material-ui/icons/AddAlertOutlined';
 import PersonAddOutlinedIcon from '@material-ui/icons/PersonAddOutlined';
 import ColorLensOutlinedIcon from '@material-ui/icons/ColorLensOutlined';
 import ArchiveOutlinedIcon from '@material-ui/icons/ArchiveOutlined';
+import UnArchiveOutlinedIcon from '@material-ui/icons/UnarchiveOutlined';
 import MoreVertOutlinedIcon from '@material-ui/icons/MoreVertOutlined';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import './notesTools.css';
+import Popover from '@material-ui/core/Popover';
+import Typography from '@material-ui/core/Typography';
 import Service from '../../Services/noteService'
+import RestoreFromTrashOutlinedIcon from '@material-ui/icons/RestoreFromTrashOutlined';
+import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 
 const services = new Service()
 
@@ -28,40 +33,65 @@ export default function NotesTools(props){
         {key:'11' , id: "#e6c9a8" },
         {key:'12' , id: "#e8eaed" },
     ];
-    const [color, setColor] = React.useState(false)
+    // const [color, setColor] = React.useState(false)
     const [pallete, showPallete] = React.useState(false);
     const[open, setOpen] = React.useState(false);
+    const [anchorEl, setAnchorEl] = React.useState(null);
 
-    const selectColor = (value) => {
-        props.setBgColor(value);
-    };
-
-    const handleColor = () => {
-        setColor(true)
+    // const handleColor = () => {
+    //     setColor(true)
+    // }
+    // const handleColorOut = () => {
+    //     setColor(false)
+    // }
+    const handleMouse = (event) => {
+        // handleColor();
+        setAnchorEl(event.currentTarget);
+        showPallete(!pallete)
     }
-
-    const handleColorOut = () => {
-        setColor(false)
-    }
-    const handleMouse = () => {
-        handleColor();
+    const handleClose = () => {
+        // handleColor();
+        // setAnchorEl(event.currentTarget);
         showPallete(!pallete)
     }
     const handleClick = () => {
       setOpen(!open);
-  } 
-  const handleDeleteNotes = () => {
-    let data = {
-        noteIdList: [props.id],
-         isDeleted: true
+    } 
+    const handleDeleteNotes = () => {
+        let data = {
+            noteIdList: [props.id],
+            isDeleted: true
+        }
+        services.delete(data, localStorage.getItem("userToken")).then(result => {
+            console.log(result)
+            props.GetNote();
+        }).catch(error => {
+            console.log(error);
+        })
     }
-    services.delete(data, localStorage.getItem("userToken")).then(result => {
-        console.log(result)
-        props.GetNote();
-    }).catch(error => {
-        console.log(error);
-    })
-}
+    const handleUnDeleteNotes = () => {
+        let data = {
+            noteIdList: [props.id],
+            isDeleted: false
+        }
+        services.delete(data, localStorage.getItem("userToken")).then(result => {
+            console.log(result)
+            props.GetNote();
+        }).catch(error => {
+            console.log(error);
+        })
+    }
+    const handleDeleteForever = () => {
+        let data = {
+            noteIdList: [props.id]
+        }
+        services.deleteForever(data, localStorage.getItem("userToken")).then(result => {
+            console.log(result)
+            props.GetNote();
+        }).catch(error => {
+            console.log(error);
+        })
+    }
     const handleArchiveNotes = () => {
         let data = {
             noteIdList: [props.id],
@@ -74,47 +104,119 @@ export default function NotesTools(props){
             console.log(error);
         })
     }
-
-    return(
+    const handleUnArchiveNotes = () => {
+        let data = {
+            noteIdList: [props.id],
+            isArchived: false
+        }
+        services.archiveNotes(data, localStorage.getItem("userToken")).then(result => {
+            console.log(result)
+            props.GetNote();
+        }).catch(error => {
+            console.log(error);
+        })
+    }
+    const updateColor = (value) => {
+        if (props.id !== '') {
+            props.setBgColor(value);
+            let data = {
+                noteIdList: [props.id],
+                color: value
+            }
+            services.updateColor(data, localStorage.getItem("userToken")).then(result => {
+                console.log(result)
+                props.GetNote();
+            }).catch(error => {
+                console.log(error);
+            })
+        }
+        else {
+            props.setBgColor(value);
+        }
+    }
+    return(<div>
+        {props.istrash ?
         <div>
-            <IconButton>
+            <IconButton onClick={handleDeleteForever}>
+                <DeleteForeverOutlinedIcon fontSize="small" />
             </IconButton>
+            <IconButton  onClick={handleUnDeleteNotes}>
+                <RestoreFromTrashOutlinedIcon fontSize="small" />
+            </IconButton>
+        </div>
+        :
+        <div className ='toolarButton'>
+            <IconButton>
                 <AddAlertOutlinedIcon fontSize='small' />
+            </IconButton>    
             <IconButton>
                 <PersonAddOutlinedIcon fontSize='small'/>
             </IconButton>
-            <IconButton onMouseOver={handleMouse} >
+            <div className ='color-option'>
+            <IconButton className ='color-option' onMouseOver={handleMouse} >
                 <ColorLensOutlinedIcon fontSize="small" />
             </IconButton>
-            {pallete ? (
-                <div className={color ? "colorChange" : "noChange "} 
-                    onMouseOver={handleColor} onMouseOut={handleColorOut} style={{ width: 150 }}>
+            <Popover
+                // id={id}
+                open={pallete}
+                onMouseOut={handleClose}
+                className ='color-pallete'
+                anchorEl={anchorEl}
+                // onClose={handleColorOut}
+                anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+                }}
+                transformOrigin={{
+                vertical: 'top',
+                horizontal: 'center',
+                }}
+            >
+                <Typography className='typography'>
                     {data.map((item) => (
-                        <button onMouseOver={handleColor} onClick={() => selectColor(item.id)} className="palleteColor" style={{ backgroundColor: item.id }}>
+                        <button  onClick={() => updateColor(item.id) } className="palleteColor" style={{ backgroundColor: item.id }}>
                         </button>
                     ))}
-                </div>
-            ) : null}
+                </Typography>
+            </Popover>
+            </div>
             <IconButton>
                 <ImageOutlinedIcon fontSize='small'/>
             </IconButton>
-            <IconButton onClick={handleArchiveNotes}>
-                <ArchiveOutlinedIcon fontSize='small'/>
-            </IconButton>
-            <>
-            <IconButton onClick={handleClick}>
-                <MoreVertOutlinedIcon fontSize='small'/>
+            {props.isArchive ?
+                <IconButton>
+                    <UnArchiveOutlinedIcon fontSize="small" onClick={handleUnArchiveNotes}/>
+                </IconButton>
+                :
+                <IconButton onClick={handleArchiveNotes}>
+                    <ArchiveOutlinedIcon fontSize='small'/>
+                </IconButton>
+            }
+            <div className='moreOptions'>
+            <IconButton onClick={handleClick} className='moreOptions'>
+                <MoreVertOutlinedIcon fontSize='small' />
             </IconButton>
                 <Menu
-                    className='moreOptions'
+                    className='more-Options'
                     id="simple-menu"
-                    // anchorEl={anchorEl}
-                    keepMounted
+                    anchorEl={anchorEl}
+                    keepMounted 
                     open={open}
-                    onClose={handleClick}>
+                    onClose={handleClick}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'top',
+                        }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                        }}
+                    >
                     <MenuItem onClick={handleDeleteNotes}>Delete Note</MenuItem>
                 </Menu>
-            </>
+            </div>
         </div>
+    }
+    </div>
     );
 }

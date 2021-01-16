@@ -53,4 +53,18 @@ export default class noteService{
             }
         });
     }
+    updateColor = (data, token) => {
+        return httpService.Post(`${this.baseUrl}notes/changesColorNotes`, data, {
+            headers: {
+                Authorization: `${token}`,
+            }
+        });
+    }
+    deleteForever = (data, token) => {
+        return httpService.Post(`${this.baseUrl}notes/deleteForeverNotes`, data, {
+            headers: {
+                Authorization: `${token}`,
+            }
+        });
+    }
 }

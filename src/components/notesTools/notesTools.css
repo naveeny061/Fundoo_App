@@ -1,5 +1,4 @@
-.colorChange {
-    position: absolute;
+/* .typography{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -8,10 +7,24 @@
     box-shadow: 0 1px 4px rgba(0,0,0,0.2);
     background-color: #fff;
     border-radius: 0.5em; 
+} */
+.color-option{
+    position: relative;
 }
-.noChange {
-    display: none;
-} 
+.color-pallete{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 7px;
+    box-sizing: border-box;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    border-radius: 0.5em; 
+}
+.toolarButton{
+    display: flex;
+}
 .palleteColor {
     border-radius: 20px;
     cursor: pointer;
@@ -21,4 +34,9 @@
 }
 .moreOptions{
     position: relative;
+    /* left: 330px !important; */
+    /* top: -35px !important; */
+}
+.more-Options{
+    position: absolute !important;
 }

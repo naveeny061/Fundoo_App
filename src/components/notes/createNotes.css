@@ -1,7 +1,7 @@
 .notes{
     border: 1px solid gray;
     border-radius: 0.5em;
-    width: 50vw;
+    width: 600px;
     height: max-content;
     display: flex;
 }
@@ -16,6 +16,9 @@
 .title{
     display: flex;
 }
+.title-text{
+    font-weight: 500p;
+}
 .pinbutton{
     border: unset;
     background:transparent;
@@ -27,4 +30,22 @@
 .closeButton{
     background:transparent;
     border: unset;
+}
+@media screen and (max-width:900px) {
+    .notes{
+        width: 400px;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .notes{ 
+        width: 250px;
+    }
+}
+@media screen and (max-width:360px) {
+    .tools-close{
+        justify-content: unset;
+        /* width: 311px; */
+        width: max-content;
+    }
 }

@@ -10,22 +10,21 @@ import UpdateNote from '../updateNote/updateNote'
             setUpdate(true)
             setNote(value)
         }
-    
         const handleClose = () => {
             setUpdate(false)
         }
     return (
         <div className='displayNotes'>
             {props.NoteList.map((item) =>(
-            <div className='notes1' style={{  backgroundColor: item.color }} onClick={() => handleUpdate(item)}>
-                <div>
+            <div className='notes1' style={{  backgroundColor: item.color }}>
+                <div className='title' onClick={() => handleUpdate(item)}>
                     {item.title}
                 </div>
-                <div>
+                <div className='description' onClick={() => handleUpdate(item)}>
                     {item.description}
                 </div>
-                <div>
-                    <NotesTools  id={item.id}/>
+                <div className='toolbar'>
+                    <NotesTools  id={item.id}  GetNote={props.GetNote} isArchive={props.isArchive} istrash={props.istrash}/>
                 </div>
             </div> 
         ))}

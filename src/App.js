@@ -5,6 +5,7 @@ import {BrowserRouter, Route , Switch} from 'react-router-dom'
 import ForgetPassword from './components/forgetPassword/forgetPassword';
 import ResetPassword from "./components/resetPassword/resetPassword";
 import Dashboard from "./components/Dashboard/dashboard";
+import { ProtectedRoute } from "./ProtectedRoutes/ProtectedRoutes";
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
          <Route exact path="/signIn" component={SignIn} />
          <Route exact path="/forgetPassword" component={ForgetPassword} />
          <Route exact path="/resetPassword/:token" component={ResetPassword} />
-         <Route exact path="/dashboard" component={Dashboard} />
+         <ProtectedRoute  path="/Dashboard" component={Dashboard} />
         </Switch>
       </BrowserRouter>
     </div>
