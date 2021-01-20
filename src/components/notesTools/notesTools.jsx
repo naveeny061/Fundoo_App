@@ -33,25 +33,15 @@ export default function NotesTools(props){
         {key:'11' , id: "#e6c9a8" },
         {key:'12' , id: "#e8eaed" },
     ];
-    // const [color, setColor] = React.useState(false)
     const [pallete, showPallete] = React.useState(false);
     const[open, setOpen] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
 
-    // const handleColor = () => {
-    //     setColor(true)
-    // }
-    // const handleColorOut = () => {
-    //     setColor(false)
-    // }
     const handleMouse = (event) => {
-        // handleColor();
         setAnchorEl(event.currentTarget);
         showPallete(!pallete)
     }
     const handleClose = () => {
-        // handleColor();
-        // setAnchorEl(event.currentTarget);
         showPallete(!pallete)
     }
     const handleClick = () => {

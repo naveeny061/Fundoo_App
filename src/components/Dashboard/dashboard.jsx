@@ -88,7 +88,6 @@ const useStyles = makeStyles((theme) => ({
     boxShadow :'unset',
     borderBottom: '1px solid lightGrey',
     borderRadius:0,
-    // ...theme.mixins.toolbar,
   },
   search: {
     display:'flex',
@@ -122,6 +121,9 @@ const useStyles = makeStyles((theme) => ({
     width:'100%',
     [theme.breakpoints.down('xs')]: {
       width: '0',
+    },
+    [theme.breakpoints.up('xs')]: {
+      width: '400px',
     }
   },
   inputInput: {
@@ -134,12 +136,7 @@ const useStyles = makeStyles((theme) => ({
     },
 
   },
-  // sectionDesktop: {
-  //   // display: 'none',
-  //   [theme.breakpoints.up('md')]: {
-  //     display: 'flex',
-  //   },
-  // },
+  
   profile:{
     display: 'flex',
     flexDirection:'column',

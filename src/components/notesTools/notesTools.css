@@ -1,13 +1,3 @@
-/* .typography{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding: 7px;
-    box-sizing: border-box;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-    background-color: #fff;
-    border-radius: 0.5em; 
-} */
 .color-option{
     position: relative;
 }
@@ -34,8 +24,6 @@
 }
 .moreOptions{
     position: relative;
-    /* left: 330px !important; */
-    /* top: -35px !important; */
 }
 .more-Options{
     position: absolute !important;
